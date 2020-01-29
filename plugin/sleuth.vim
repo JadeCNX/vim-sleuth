@@ -83,17 +83,27 @@ function! s:guess(lines) abort
     if indent > 1 && (indent < 4 || indent % 2 == 0) &&
           \ get(options, 'shiftwidth', 99) > indent
       let options.shiftwidth = indent
+      " echom 'set options shiftwidth='. indent
     endif
   endfor
 
+  " echom 'heuristics '. heuristics.soft . ' ' . heuristics.hard . ' ' . heuristics.spaces
   if heuristics.hard && !heuristics.spaces
-    return {'expandtab': 0, 'shiftwidth': &tabstop}
+    let options.expandtab = 0
+    let options.shiftwidth = &tabstop
+    " echom 'set options expandtab='. 0
   elseif heuristics.soft != heuristics.hard
     let options.expandtab = heuristics.soft > heuristics.hard
     if heuristics.hard
       let options.tabstop = &tabstop
+      let options.shiftwidth = &tabstop
+      " echom 'set options tabstop='. options.tabstop
     endif
   endif
+
+  " for [k, v] in items(options)
+  "  echo 'options ' . k . ': ' . v
+  " endfor
 
   return options
 endfunction
